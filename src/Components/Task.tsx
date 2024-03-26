@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     marginBottom: 20,
+
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -47,6 +48,9 @@ const styles = StyleSheet.create({
   },
   ItemText: {
     maxWidth: '80%',
+    fontWeight: '900',
+    fontSize: 15,
+    color: 'black',
   },
   circular: {
     width: 12,

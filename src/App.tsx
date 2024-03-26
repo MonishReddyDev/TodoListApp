@@ -132,7 +132,7 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(150, 200, 200, 0.2)',
+    backgroundColor: '#55bcf6',
   },
   textWrapper: {
     paddingTop: 80,
@@ -175,7 +175,11 @@ const styles = StyleSheet.create({
     borderColor: '#c0c0c0',
     borderWidth: 1,
   },
-  addText: {},
+  addText: {
+    fontWeight: '600',
+    color: '#55bcf6',
+    fontSize: 30,
+  },
   noTasksTextContainer: {
     flex: 1,
     justifyContent: 'center',
