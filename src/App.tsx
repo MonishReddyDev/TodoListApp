@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
   FlatList,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Task from './Components/Task';
@@ -23,8 +24,6 @@ interface Task {
 const App = () => {
   const [task, setTask] = useState('');
   const [TaskItem, setTaskItem] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [lastVisible, setLastVisible] = useState<any>(null);
 
   //To reload the app and get the tasks in firebase
   useEffect(() => {
@@ -44,7 +43,6 @@ const App = () => {
 
   //Get the data from the firestore
   const getTasks = async () => {
-    setLoading(true);
     try {
       const TasksData = await firestore().collection('Tasks').get();
       const tasks = TasksData.docs.map(doc => ({id: doc.id, ...doc.data()}));
@@ -72,10 +70,14 @@ const App = () => {
   };
 
   const handleAdd = () => {
-    Keyboard.dismiss();
-    addTask(task);
-    getTasks();
-    setTask('');
+    if (task.trim() !== '') {
+      Keyboard.dismiss();
+      addTask(task);
+      getTasks();
+      setTask('');
+    } else {
+      Alert.alert('Task cannot be empty!');
+    }
   };
 
   return (
@@ -84,7 +86,7 @@ const App = () => {
       <View style={styles.textWrapper}>
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
         <View style={styles.items}>
-          <View>
+          {TaskItem.length != 0 ? (
             <FlatList
               renderItem={({item, index}) => (
                 <TouchableOpacity
@@ -96,7 +98,13 @@ const App = () => {
               data={TaskItem}
               keyExtractor={item => item.id}
               onEndReachedThreshold={0.1}></FlatList>
-          </View>
+          ) : (
+            <View style={styles.noTasksTextContainer}>
+              <Text style={styles.noTasksText}>
+                No tasks to display. Add new tasks below.
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       {/* Task input*/}
@@ -124,14 +132,16 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#E8EAED',
+    backgroundColor: 'rgba(150, 200, 200, 0.2)',
   },
   textWrapper: {
     paddingTop: 80,
     paddingHorizontal: 20,
+    flex: 1,
   },
   items: {
     marginTop: 20,
+    height: '70%',
   },
   sectionTitle: {
     fontSize: 24,
@@ -166,4 +176,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   addText: {},
+  noTasksTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noTasksText: {
+    color: '#0b2e59',
+  },
 });
